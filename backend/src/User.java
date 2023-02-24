@@ -92,7 +92,7 @@ public class User {
     }
     public static void main(String[] args) {
         User newUser = new User(0, "king", "macth2023");
-
+  
         newUser.addUserToDatabase();
         System.out.println("New user added to the database.");
     }
