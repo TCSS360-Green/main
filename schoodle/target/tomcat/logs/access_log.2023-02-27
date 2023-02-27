@@ -1,0 +1,7 @@
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:29 -0800] "GET /schoodle HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:29 -0800] "GET /schoodle/ HTTP/1.1" 304 - http-bio-8080-exec-3 10
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:29 -0800] "GET /schoodle/avatar.png HTTP/1.1" 404 989 http-bio-8080-exec-4 3
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:35 -0800] "POST /schoodle/login HTTP/1.1" 302 - http-bio-8080-exec-5 5
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:35 -0800] "GET /schoodle/homepage.html HTTP/1.1" 200 830 http-bio-8080-exec-6 2
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:35 -0800] "GET /schoodle/script.js HTTP/1.1" 404 987 http-bio-8080-exec-2 1
+0:0:0:0:0:0:0:1 - - [27/Feb/2023:02:36:35 -0800] "GET /schoodle/homepage.css HTTP/1.1" 200 1262 http-bio-8080-exec-7 4
