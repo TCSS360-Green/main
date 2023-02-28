@@ -1,65 +1,166 @@
-.loginbox {
-	width: 320px;
-	height: 420px;
-	background: #000;
-	color: #fff;
-	top: 50%;
-	left: 50%;
-	position: absolute;
-	transform: translate(-50%, -50%);
-	box-sizing: border-box;
-	padding: 70px 30px;
+* { box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css?family=Rubik:400,500&display=swap');
+
+
+body {
+  font-family: 'Rubik', sans-serif;
 }
 
-.avatar {
-	width: 100px;
-	height: 100px;
-	border-radius: 50%;
-	position: absolute;
-	top: -50px;
-	left: calc(50% - 50px);
+.container {
+  display: flex;
+  height: 100vh;
 }
 
-h1 {
-	margin: 0;
-	padding: 0 0 20px;
-	text-align: center;
-	font-size: 22px;
+.left {	
+  background-color: #ffffff;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  animation-name: left;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-delay: 1s;
 }
 
-.loginbox p {
-	margin: 0;
-	padding: 0;
-	font-weight: bold;
+.right {
+  flex: 1;
+  background-color: #000;
+  transition: 2s;
+  background-image: url('images/loginscreen.jpeg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.loginbox input {
-	width: 100%;
-	margin-bottom: 20px;
+#signup-success {
+   text-align: right;
+   color: #e43d05;
+   font-size: 10px;
 }
 
-.loginbox input[type="text"], input[type="password"] {
-	border: none;
-	border-bottom: 1px solid #fff;
-	background: transparent;
-	outline: none;
-	height: 40px;
-	color: #fff;
-	font-size: 16px;
+
+.header > h2 {
+  margin: 0;
+  color: #f45d05cf;
 }
 
-.loginbox input[type="submit"] {
-	border: none;
-	outline: none;
-	height: 40px;
-	background: #fb2525;
-	color: #fff;
-	font-size: 18px;
-	border-radius: 20px;
+.header > h4 {
+  margin-top: 10px;
+  font-weight: normal;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.4);
+}
+#signup-form{
+	display: none;
 }
 
-.loginbox input[type="submit"]:hover {
-	cursor: pointer;
-	background: #ffc107;
-	color: #000;
+.form {
+  max-width: 80%;
+  display: flex;
+  flex-direction: column;
+}
+.form-field {
+	height: 46px;
+	padding: 0 16px;
+	border: 2px solid #ddd;
+	border-radius: 4px;
+	font-family: 'Rubik', sans-serif;
+	outline: 0;
+	transition: .2s;
+	margin-top: 20px;
+  }
+  
+  .form-field:focus {
+	border-color: #0f7ef1;
+  }
+
+.form p {
+  text-align: center;
+  font-size: 13px;
+}
+
+.form a {
+  color: #000;
+  text-align: center;
+  font-size: 13px;
+}
+
+
+.form input[type="submit"] {
+  padding: 12px 10px;
+  border: 0;
+  background: linear-gradient(to right, #de7b12 0%,#e43d05 100%); 
+  border-radius: 3px;
+  margin-top: 10px;
+  color: #fff;
+  letter-spacing: 1px;
+  font-family: 'Rubik', sans-serif;
+}
+#error-message {
+ color: rgb(160, 7, 7);
+ font-size: 12px;
+ text-align: right;
+ margin-top: 10px;
+
+}
+
+
+.animation {
+  animation-name: move;
+  animation-duration: .4s;
+  animation-fill-mode: both;
+  animation-delay: 2s;
+}
+
+.a1 {
+  animation-delay: 2s;
+}
+
+.a2 {
+  animation-delay: 2.1s;
+}
+
+.a3 {
+  animation-delay: 2.2s;
+}
+
+.a4 {
+  animation-delay: 2.3s;
+}
+
+.a5 {
+  animation-delay: 2.4s;
+}
+
+.a6 {
+  animation-delay: 2.5s;
+}
+
+@keyframes move {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-40px);
+  }
+
+  100% {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+@keyframes left {
+  0% {
+    opacity: 0;
+    width: 0;
+  }
+
+  100% {
+    opacity: 1;
+    padding: 20px 40px;
+    width: 440px;
+  }
 }
