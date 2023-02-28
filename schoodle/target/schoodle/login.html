@@ -13,10 +13,11 @@
 			</div>
 			<div >
 				<form class="form" action="login" method="POST" onsubmit="return validateForm()">
-					<input type="hidden" name="action" value="login">
+	
 					<input class="form-field animation a3" type="text" id="username" name="username" placeholder="Username">
 					<input class="form-field animation a4" type="password" id="password" name="password" placeholder="Password">
 					<div id="error-message"></div>
+	
 					<input class ="form-field animation a5" type="submit" name="submit" value="LOGIN">
 					<p class="animation a5">Don't have an account? <a href="signup.html">Sign Up</a>
 				</form>
@@ -50,13 +51,14 @@
       window.location.href = 'homepage.html';
     } else {
       // Login failed, display error message
+      console.log("day ne");
       errorMessage.innerHTML = data.message;
     }
   })
   .catch(error => {
     // Handle network or server errors
-    console.error(error);
-    errorMessage.innerHTML = 'Invalid username or password. Try again!';
+  
+    errorMessage.innerHTML = 'Network or server failed';
   });
 
   return false;

@@ -1,4 +1,5 @@
 Users.class
 LoginServlet.class
 UserController.class
+SignUpServlet.class
 CSVHandler.class

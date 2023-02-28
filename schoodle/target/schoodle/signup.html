@@ -12,14 +12,13 @@
 				<h4 class="animation a2">Sign up for an account</h4>
 			</div>
 			<div >
-				<form class="form" action="login" method="post" onsubmit="return validateForm()">
-					<input type="hidden" name="action" value="signup">
+				<form class="form" action="signup" method="post" onsubmit="return validateForm()">
 					<input class="form-field animation a3" type="text" id="fullname" name="fullName" placeholder="Full Name">
 					<input class="form-field animation a3" type="text" id="username" name="username" placeholder="Username">
 					<input class="form-field animation a4" type="password" id="password" name="password" placeholder="Password">
 					<input class="form-field animation a5" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password">
 					<div id="message"></div>
-					<input class ="form-field animation a5" type="submit" name="submit" value="SIGN UP" onclick="signUp()">
+					<input class ="form-field animation a5" type="submit" name="submit" value="SIGN UP" >
 					<p class="animation a5">Already have an account? <a href="login.html">Sign In</a>
 				</form>
 			</div>
@@ -28,74 +27,51 @@
 	</div>
 	<script>
 		function validateForm() {
-		  var fullName = document.getElementById("fullname").value;
-		  var username = document.getElementById("username").value;
-		  var password = document.getElementById("password").value;
-		  var confirmPassword = document.getElementById("confirmPassword").value;
-		
-		  var message = document.getElementById("message");
-		  message.style.display = "none";
-		
-		  if (fullName === "" || username === "" || password === "" || confirmPassword === "") {
-			message.innerHTML = "Please fill out all fields.";
-			message.style.display = "block";
-			message.style.color = "red";
-			return false;
-		  } else if (password !== confirmPassword) {
-			message.innerHTML = "Passwords do not match.";
-			message.style.display = "block"
-			message.style.color = "red";;
-			return false;
-		  }
-		
-		  return true;
-		}
-		
-		function signUp() {
-  const form = document.getElementById("signup-form");
-  const formData = new FormData(form);
-  const message = document.getElementById("message");
-  const data = {
-    action: "signup",
-    username: formData.get("username"),
-    password: formData.get("password"),
-    fullName: formData.get("fullName"),
-  };
-		  fetch("/login", {
-			method: "POST",
-			headers: {
-			  "Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-			  action: "signup",
-			  fullName: fullName,
-			  username: username,
-			  password: password,
-			})
-			
-		  })
-		  
-		  .then(response => { 
-	
-  			response.json();
-		  })
-		  .then(data => {
-			
-	
-			if (data.success) {
-			  message.innerHTML = "Sign up successful!";
-			  message.style.color = "green";
-			} else {
-			  message.innerHTML = data.message;
-			  message.style.color = "red";
-			}
-			message.style.display = "block";
-		  })
-		  .catch(error => {
-			console.error("Error:", error);
-		  });
-		}
-		</script>
+  var fullName = document.getElementById("fullname").value;
+  var username = document.getElementById("username").value;
+  var password = document.getElementById("password").value;
+  var confirmPassword = document.getElementById("confirmPassword").value;
+  var message = document.getElementById("message");
+  
+  if (fullName === "" || username === "" || password === "" || confirmPassword === "") {
+    message.innerHTML = "Please fill out all fields.";
+    message.style.display = "block";
+    message.style.color = "red";
+    return false;
+  } 
+  if (password !== confirmPassword) {
+    message.innerHTML = "Passwords do not match.";
+    message.style.display = "block"
+    message.style.color = "red";;
+    return false;
+  }
+
+  fetch('signup', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: 'fullName=' + encodeURIComponent(fullName) + '&username=' + encodeURIComponent(username) + '&password=' + encodeURIComponent(password)
+})
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+	  
+      message.innerHTML = data.message;
+    } else {
+	  
+      message.innerHTML = data.message;
+	  
+    }
+  })
+  .catch(error => {
+    message.innerHTML = 'Network or server failed';
+  });
+  
+  	return false;
+	}
+
+</script>
 		
 	
 	

@@ -27,13 +27,18 @@ body {
 .right {
   flex: 1;
   background-color: #000;
-  transition: 3s;
+  transition: 2s;
   background-image: url('images/loginscreen.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
 
+#signup-success {
+   text-align: right;
+   color: #e43d05;
+   font-size: 10px;
+}
 
 
 .header > h2 {

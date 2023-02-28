@@ -93,12 +93,11 @@ body {
   letter-spacing: 1px;
   font-family: 'Rubik', sans-serif;
 }
-#error-message {
- color: rgb(160, 7, 7);
- font-size: 12px;
+#message {
+ color: red;
+ font-size: 14px;
  text-align: right;
  margin-top: 10px;
-
 }
 
 

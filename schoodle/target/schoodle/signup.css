@@ -27,7 +27,7 @@ body {
 .right {
   flex: 1;
   background-color: #000;
-  transition: 3s;
+  transition: 2s;
   background-image: url('images/loginscreen.jpeg');
   background-size: cover;
   background-repeat: no-repeat;
@@ -93,12 +93,11 @@ body {
   letter-spacing: 1px;
   font-family: 'Rubik', sans-serif;
 }
-#error-message {
+#message {
  color: rgb(160, 7, 7);
  font-size: 12px;
  text-align: right;
  margin-top: 10px;
-
 }
 
 
