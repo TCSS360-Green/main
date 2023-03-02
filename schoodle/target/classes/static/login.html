@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Schoodle Application</title>
+	<link rel="stylesheet" type="text/css" href="login.css">
+</head>
+<body>
+	<div class="container">
+		<div class="left">
+			<div class="header">
+				<h2 class="animation a1">Welcome to Schoodle</h2>
+				<h4 class="animation a2">Log in to your account</h4>
+			</div>
+			<div >
+				<form class="form" action="login" method="POST" onsubmit="return validateForm()">
+	
+					<input class="form-field animation a3" type="text" id="username" name="username" placeholder="Username">
+					<input class="form-field animation a4" type="password" id="password" name="password" placeholder="Password">
+					<div id="error-message"></div>
+	
+					<input class ="form-field animation a5" type="submit" name="submit" value="LOGIN">
+					<p class="animation a5">Don't have an account? <a href="signup.html">Sign Up</a>
+				</form>
+				
+			</div>
+		</div>
+		<div class="right"></div>
+	</div>
+	<script>
+		function validateForm() {
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+    var errorMessage = document.getElementById("error-message");
+  
+    if (username === "" || password === "") {
+      errorMessage.innerHTML = "Please enter a username and password";
+      return false;
+    }
+  
+    fetch('/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Login successful, redirect to homepage
+        window.location.href = 'homepage.html';
+      } else {
+        // Login failed, display error message
+        errorMessage.innerHTML = data.message;
+      }
+    })
+    .catch(error => {
+      // Handle network or server errors
+      errorMessage.innerHTML = 'Network or server failed';
+    });
+  
+    return false;
+  }
+	</script>
+	
+</body>
+
+</html>

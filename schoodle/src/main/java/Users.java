@@ -1,9 +1,23 @@
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-
+@Entity
+@Table(name = "users")
 public class Users {
+    @Id
+    @Column(name = "username")
     private String username;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "full_name")
     private String fullName;
+
+    public Users() {
+    }
 
     public Users(String username, String password, String fullName) {
         this.username = username;

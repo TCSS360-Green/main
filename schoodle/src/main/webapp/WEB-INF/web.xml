@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
-        "http://java.sun.com/dtd/web-app_2_3.dtd">
+<!DOCTYPE web-app PUBLIC "-//Jetty//DTD Web Application 3.0//EN"
+        "http://www.eclipse.org/jetty/dtd/webapp_3_0.dtd">
 <web-app>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
@@ -13,4 +13,7 @@
     <welcome-file-list>
        <welcome-file>/login.html</welcome-file>
     </welcome-file-list>
+    <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 </web-app>

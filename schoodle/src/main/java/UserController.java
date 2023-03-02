@@ -1,22 +1,37 @@
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserController {
-    private List<Users> users;
-    private CSVHandler csvHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-    public UserController(CSVHandler csvHandler) throws IOException {
-        this.csvHandler = csvHandler;
+@Component
+public class UserController {
+    
+    private List<Users> users = new ArrayList<>();
+    
+    @Autowired
+    private CSVHandler csvHandler = new CSVHandler("src/main/resources/users.csv");
+
+    public void init() throws IOException {
         List<String[]> userData = csvHandler.readAll();
-        this.users = new ArrayList<>();
 
         for (String[] data : userData) {
             Users user = new Users(data[0], data[1], data[2]);
             this.users.add(user);
         }
+    }
+
+    public void save(Users user) throws IOException {
+        users.add(user);
+
+        List<String[]> data = new ArrayList<>();
+        for (Users u : users) {
+            String[] userData = { u.getUsername(), u.getPassword(), u.getFullName() };
+            data.add(userData);
+        }
+
+        csvHandler.writeAll(data);
     }
 
     public boolean addUser(String username, String password, String fullName) throws IOException {
@@ -28,15 +43,7 @@ public class UserController {
         }
 
         Users newUser = new Users(username, password, fullName);
-        users.add(newUser);
-
-        List<String[]> data = new ArrayList<>();
-        for (Users user : users) {
-            String[] userData = { user.getUsername(), user.getPassword(), user.getFullName() };
-            data.add(userData);
-        }
-
-        csvHandler.writeAll(data);
+        save(newUser);
 
         return true;
     }
@@ -49,5 +56,4 @@ public class UserController {
         }
         return false;
     }
-   
 }
