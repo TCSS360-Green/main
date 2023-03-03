@@ -1,0 +1,70 @@
+Code review guildline:
+  1. Classes to look: 
+    Users.java
+    Projects.java
+    Products.java
+    Expenses.java
+  2. User Stories:
+  - As a project planner, I want a way to know when expenses exceed the budget and adjust accordingly: 
+    + In Projects.java class, we have methods that handle tasks like adding expense, get total expenses, and calculate remaining budget. 
+    + Directory: TCSS360-Green/main/schoodle/src/main/java/Projects.java
+    + Block of code to review: 
+        public class Projects { 
+           private List<Expenses> expenses;
+         .
+         .
+         .
+          public void setBudget(double budget) {
+        this.budget = budget;
+    }
+
+    public List<Expenses> getExpenses() {
+        return expenses;
+    }
+
+    public void addExpense(Expenses expense) {
+        expenses.add(expense);
+    }
+
+    public double getTotalExpenses() {
+        double totalExpenses = 0;
+        for (Expenses expense : expenses) {
+            totalExpenses += expense.getAmount();
+        }
+        return totalExpenses;
+    }
+
+    public double getRemainingBudget() {
+        return budget - getTotalExpenses();
+    }
+}
+  - As a product user, I want to have a way to set a reminder for an appliance or product to know when something needs serviced or when the warrant is 
+  about to expire:
+    + In Products.java class, we have an instance field named `warrantyDate` and we have getter, setter methods to insert Warranty infomation. We haven't 
+    had time to implement the notification feature yet.
+    + Directory:  TCSS360-Green/main/schoodle/src/main/java/Products.java
+    + Block of code to review: 
+      public class Products {
+        private Date warrantyDate;
+        .
+        .
+        .
+         public Date getWarrantyDate() {
+        return warrantyDate;
+    }
+
+    public void setWarrantyDate(Date warrantyDate) {
+        this.warrantyDate = warrantyDate;
+    }
+    }
+
+  3. Class diagram: 
+  https://drive.google.com/file/d/1JChzrfarWl71SnoouK25JjHIuBe_9S2d/view?usp=sharing
+  
+
+
+
+
+
+
+
