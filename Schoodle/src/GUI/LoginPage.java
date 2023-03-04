@@ -25,11 +25,7 @@ public class LoginPage extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
 
-         // Set frame properties
-         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         pack();
-         setLocationRelativeTo(null);
-         setVisible(true);
+         
          
         // Title label
         titleLabel = new JLabel("Welcome to Schoodle");
@@ -236,7 +232,13 @@ public class LoginPage extends JFrame {
         }
         
      });
+     // Set frame properties
+     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     pack();
+     setLocationRelativeTo(null);
+     setVisible(true);
     }
+    
 
     public static void main(String[] args) throws IOException {
         new LoginPage();
