@@ -72,7 +72,7 @@ public class LoginPage extends JFrame {
         buttonsPanel.add(loginButton,gbc);
         
     
-        CSVHandler csvHandler = new CSVHandler("src/resources/users.csv");
+        CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/users.csv");
         UserController userController = new UserController(csvHandler);
 
          
@@ -96,7 +96,12 @@ public class LoginPage extends JFrame {
                 if (isValid) {
                     // Close login page and open homepage GUI
                     dispose();
-                    HomePage homePageGUI = new HomePage();
+                    try {
+                        HomePage homePageGUI = new HomePage();
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
                 } else {
                     // Display error message
                     JOptionPane.showMessageDialog(LoginPage.this,
