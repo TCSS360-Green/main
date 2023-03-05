@@ -12,12 +12,12 @@ import java.util.List;
 import javax.swing.*;
 
 public class HomePage extends JFrame {
-    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn;
+    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn, aboutBtn;
     private JTextField searchField;
     private JPanel listPanel;
     private List<Projects> projectList;
 
-    public HomePage() throws IOException {
+    public HomePage(String name) throws IOException {
         setTitle("Business Expense Tracker");
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -191,11 +191,40 @@ public class HomePage extends JFrame {
         // Add panels to main window
         add(listPanel, BorderLayout.CENTER);
 
+        //Welcome Label 
+        JLabel welcomeUser = new JLabel("Welcome Back " + name + "!", null, SwingConstants.CENTER);
+        welcomeUser.setFont(new Font("Arial", Font.PLAIN, 30));
+        listPanel.add(welcomeUser);
+
+
+        // About Button
+        aboutBtn = new JButton("About");
+        buttonPanel.add(aboutBtn);
+        aboutBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listPanel.removeAll();
+                // Add project list items to listPanel
+                String USER_NAME = name;
+                String TEAM_NAME = "Team Hi Chew";
+                String[] TEAM_MEMBERS = {"Aaron","Anna","Veasna","Ivan"};
+                StringBuilder message = new StringBuilder();
+                message.append("This app is registered to: ").append(USER_NAME).append("\n");
+                message.append("Provided by ").append(TEAM_NAME).append("\n");
+                for (String member : TEAM_MEMBERS) {
+                message.append("\t").append(member).append("\n");
+                }
+                JOptionPane.showMessageDialog(null, message, "About Version 1.0", JOptionPane.INFORMATION_MESSAGE);
+
+                listPanel.revalidate();
+                listPanel.repaint();
+                addProjectBtn.setVisible(false);
+            }
+        });
 
         setVisible(true);
     }
 
     public static void main(String[] args) throws IOException {
-        new HomePage();
+        new HomePage(null);
     }
 }
