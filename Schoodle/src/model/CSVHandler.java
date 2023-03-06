@@ -23,6 +23,8 @@ public class CSVHandler {
                 String[] values = line.split(",");
                 data.add(values);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return data;
