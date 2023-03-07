@@ -1,2 +1,1 @@
-username,password,fullname,email
-test,test,test,test@gmail.com
+userid,username,password,fullName,email

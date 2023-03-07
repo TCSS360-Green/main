@@ -11,29 +11,44 @@ public class UserController {
 
     public UserController(CSVHandler csvHandler) throws IOException {
         this.csvHandler = csvHandler;
+        
         List<String[]> userData = csvHandler.readAll();
         this.users = new ArrayList<>();
+        boolean isFirstRow = true;
 
         for (String[] data : userData) {
-            Users user = new Users(data[0], data[1], data[2],data[3]);
+            if (isFirstRow) {
+                isFirstRow = false;
+                continue;
+            }
+    
+            Users user = new Users(Integer.parseInt(data[0]), data[1], data[2],data[3],data[4]);
             this.users.add(user);
         }
     }
 
-    public boolean addUser(String username, String password, String fullName , String email) throws IOException {
+    public boolean addUser(String username, String password, String fullName, String email) throws IOException {
         // Check if username already exists
         for (Users user : users) {
-            if (user.getUsername().equals(username) ) {
+            if (user.getUsername().equals(username)) {
                 return false;
             }
         }
 
-        Users newUser = new Users(username, password, fullName, email);
+        // Find the next available user ID
+        int userId = 1;
+        for (Users user : users) {
+            if (user.getUserId() >= userId) {
+                userId = user.getUserId() + 1;
+            }
+        }
+
+        Users newUser = new Users(userId,username, password, fullName, email);
         users.add(newUser);
 
         List<String[]> data = new ArrayList<>();
         for (Users user : users) {
-            String[] userData = { user.getUsername(), user.getPassword(), user.getFullName() ,user.getEmail() };
+            String[] userData = {  String.valueOf(user.getUserId()),user.getUsername(), user.getPassword(), user.getFullName(), user.getEmail() };
             data.add(userData);
         }
 
@@ -41,7 +56,14 @@ public class UserController {
 
         return true;
     }
-
+    public Users getUserByUsername(String username) {
+        for (Users user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
     public boolean login(String username, String password) {
         for (Users user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {

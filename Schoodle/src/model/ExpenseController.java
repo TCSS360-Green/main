@@ -7,7 +7,7 @@ public class ExpenseController {
     private static List<Expenses> expenses = new ArrayList<>();
     private static CSVHandler csvHandler = new CSVHandler("expenses.csv");
 
-    public static void addExpense(double amount, String description, String date, int projectId) throws IOException {
+    public static void addExpense(int projectId,double amount, String description, String date) throws IOException {
         Expenses newExpense = new Expenses(projectId,amount, description, date);
         expenses.add(newExpense);
         csvHandler.writeAll(expensesToString());

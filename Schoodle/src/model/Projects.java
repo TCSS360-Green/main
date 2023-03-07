@@ -1,30 +1,38 @@
 package model;
 
-import java.util.List;
+
 
 public class Projects {
-    private int id;
+    private int userId;
+    private int projectId;
     private String name;
-    private String startDate;
-    private String endDate;
     private double budget;
-    private List<Expenses> expenses;
+    private double estimateCost;
+    
 
-    public Projects(int id, String name, String startDate, String endDate, double budget, List<Expenses> expenses) {
-        this.id = id;
+    public Projects(int projectID,int userId, String name, double budget, double estimateCost) {
+        this.projectId=projectID;
+        this.userId = userId;
         this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.budget = budget;
-        this.expenses = expenses;
+        this.estimateCost = estimateCost;
+       
+        
+
+    }
+    public int getProjectId() {
+        return projectId;
     }
 
-    public int getId() {
-        return id;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
+    }
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -35,22 +43,6 @@ public class Projects {
         this.name = name;
     }
 
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
     public double getBudget() {
         return budget;
     }
@@ -58,24 +50,13 @@ public class Projects {
     public void setBudget(double budget) {
         this.budget = budget;
     }
-
-    public List<Expenses> getExpenses() {
-        return expenses;
+    public double getEstimateCost() {
+        return estimateCost;
     }
 
-    public void addExpense(Expenses expense) {
-        expenses.add(expense);
+    public void setEstimateCost(double estimateCost) {
+        this.estimateCost = estimateCost;
     }
+    
 
-    public double getTotalExpenses() {
-        double totalExpenses = 0;
-        for (Expenses expense : expenses) {
-            totalExpenses += expense.getAmount();
-        }
-        return totalExpenses;
-    }
-
-    public double getRemainingBudget() {
-        return budget - getTotalExpenses();
-    }
 }

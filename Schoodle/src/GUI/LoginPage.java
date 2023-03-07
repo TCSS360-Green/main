@@ -97,7 +97,7 @@ public class LoginPage extends JFrame {
                     // Close login page and open homepage GUI
                     dispose();
                     try {
-                        HomePage homePageGUI = new HomePage(username);
+                        HomePage homePageGUI = new HomePage(userController.getUserByUsername(username));
                     } catch (IOException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();

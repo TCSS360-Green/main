@@ -9,56 +9,59 @@ public class ProjectController {
     public ProjectController(CSVHandler csvHandler) {
         this.csvHandler = csvHandler;
     }
-
-    public void addProject(int id, String name, String startDate, String endDate, double budget, List<Expenses> expenses) throws IOException {
+    public int getNextProjectID() throws IOException {
         List<String[]> data = csvHandler.readAll();
-        int maxId = 0;
-
+        int maxProjectID = 999; // start projectID at 1000
         for (String[] row : data) {
             int currentId = Integer.parseInt(row[0]);
-
-            if (currentId > maxId) {
-                maxId = currentId;
+            if (currentId > maxProjectID) {
+                maxProjectID = currentId;
             }
         }
-
-        String[] newProject = { Integer.toString(maxId + 1), name, startDate, endDate, Double.toString(budget), ExpenseController.expensesToString(expenses) };
+        return maxProjectID + 1;
+    }
+    public void addProject(Projects project) throws IOException {
+        List<String[]> data = csvHandler.readAll();
+        String[] newProject = { Integer.toString(project.getProjectId()), Integer.toString(project.getUserId()), project.getName(), Double.toString(project.getBudget()),Double.toString(project.getEstimateCost())};
         data.add(newProject);
         csvHandler.writeAll(data);
     }
+    
 
-    public void deleteProject(int id) throws IOException {
+    public void deleteProject(int projectID) throws IOException {
         List<String[]> data = csvHandler.readAll();
 
         for (int i = 0; i < data.size(); i++) {
             String[] row = data.get(i);
             int currentId = Integer.parseInt(row[0]);
 
-            if (currentId == id) {
+            if (currentId == projectID) {
                 data.remove(i);
                 csvHandler.writeAll(data);
                 return;
             }
-        }
+        } 
+         
     }
 
-    public void updateProject(int id, String name, String startDate, String endDate, double budget, List<Expenses> expenses) throws IOException {
+    public void updateProject(Projects project) throws IOException {
         List<String[]> data = csvHandler.readAll();
-
+    
         for (int i = 0; i < data.size(); i++) {
             String[] row = data.get(i);
             int currentId = Integer.parseInt(row[0]);
-
-            if (currentId == id) {
-                String[] updatedProject = { Integer.toString(id), name, startDate, endDate, Double.toString(budget), ExpenseController.expensesToString(expenses) };
+    
+            if (currentId == project.getProjectId()) {
+                String[] updatedProject = { Integer.toString(project.getProjectId()), Integer.toString(project.getUserId()), project.getName(), Double.toString(project.getBudget()), Double.toString(project.getEstimateCost()) };
                 data.set(i, updatedProject);
                 csvHandler.writeAll(data);
                 return;
             }
         }
     }
-    public Projects searchProjectByName(String name) throws IOException {
-        List<Projects> projects = getAllProjects();
+    
+    public Projects searchProjectByName(int userid,String name) throws IOException {
+        List<Projects> projects = getAllProjects(userid);
         for (Projects project : projects) {
             if (project.getName().equals(name)) {
                 return project;
@@ -66,7 +69,8 @@ public class ProjectController {
         }
         return null;
     }
-    public List<Projects> getAllProjects() throws IOException {
+    
+    public List<Projects> getAllProjects(int userId) throws IOException {
         List<String[]> projectData = null;
         try {
             projectData = csvHandler.readAll();
@@ -79,20 +83,23 @@ public class ProjectController {
     
         if (projectData != null) {
             for (String[] projectFields : projectData) {
-                int id = Integer.parseInt(projectFields[0]);
-                String name = projectFields[1];
-                String startDate = projectFields[2];
-                String endDate = projectFields[3];
-                double budget = Double.parseDouble(projectFields[4]);
-                List<Expenses> expenses = ExpenseController.getExpensesForProject(id);
+                int projectID = Integer.parseInt(projectFields[0]);
+                int userID = Integer.parseInt(projectFields[1]);
+                String name = projectFields[2];
+                double budget = Double.parseDouble(projectFields[3]);
+                double estimateCost = Double.parseDouble(projectFields[4]);
+                List<Expenses> expenses = ExpenseController.getExpensesForProject(projectID);
     
-                Projects project = new Projects(id, name, startDate, endDate, budget, expenses);
-                projects.add(project);
+                if (userID == userId) {
+                    Projects project = new Projects(projectID, userID, name, budget,estimateCost);
+                    projects.add(project);
+                }
             }
         }
     
         return projects;
     }
+    
     
     
 }
