@@ -72,7 +72,7 @@ public class LoginPage extends JFrame {
         buttonsPanel.add(loginButton,gbc);
         
     
-        CSVHandler csvHandler = new CSVHandler("src/resources/users.csv");
+        CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/users.csv");
         UserController userController = new UserController(csvHandler);
 
          

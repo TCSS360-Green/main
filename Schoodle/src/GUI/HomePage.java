@@ -1,22 +1,18 @@
 package GUI;
 
 import model.CSVHandler;
-import model.ExpenseController;
-import model.Expenses;
 import model.ProjectController;
 import model.Projects;
 import model.Users;
 
 import java.awt.*;
-import java.util.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class HomePage extends JFrame {
-    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn, aboutBtn;
+    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn;
     private JTextField searchField;
     private JPanel listPanel;
     private List<Projects> projectList;
@@ -213,7 +209,7 @@ public class HomePage extends JFrame {
         searchField = new JTextField(20);
         searchField.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String searchQuery = searchField.getText();
+               // String searchQuery = searchField.getText();
                 // TODO: Filter project or product list based on search query
             }
         });
