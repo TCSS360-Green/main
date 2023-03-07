@@ -20,6 +20,7 @@ public class HomePage extends JFrame {
     private JTextField searchField;
     private JPanel listPanel;
     private List<Projects> projectList;
+    JMenuBar menuBar;
 
     public HomePage(Users user) throws IOException {
         setTitle("Schoodle: Home Project And Appliance Organizer");
@@ -242,22 +243,25 @@ public class HomePage extends JFrame {
         welcomeUser.setFont(new Font("Arial", Font.PLAIN, 30));
         listPanel.add(welcomeUser);
 
-
-        // About Button
-        aboutBtn = new JButton("About");
-        buttonPanel.add(aboutBtn);
-        aboutBtn.addActionListener(new ActionListener() {
+        menuBar = new JMenuBar();
+        JMenu aboutSection = new JMenu("About");
+        menuBar.add(aboutSection);
+        aboutSection.addSeparator();
+        this.setJMenuBar(menuBar);
+        JMenuItem aboutItem = new JMenuItem("Schoodle Inc.");
+        aboutSection.add(aboutItem);
+        aboutItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 listPanel.removeAll();
                 // Add project list items to listPanel
                 String USER_NAME = user.getFullName();
                 String TEAM_NAME = "Team Hi Chew";
-                String[] TEAM_MEMBERS = {"Aaron","Anna","Veasna","Ivan"};
+                String[] TEAM_MEMBERS = {"Aaron", "Anna", "Veasna", "Ivan"};
                 StringBuilder message = new StringBuilder();
                 message.append("This app is registered to: ").append(USER_NAME).append("\n");
                 message.append("Provided by ").append(TEAM_NAME).append("\n");
                 for (String member : TEAM_MEMBERS) {
-                message.append("\t").append(member).append("\n");
+                    message.append("\t").append(member).append("\n");
                 }
                 JOptionPane.showMessageDialog(null, message, "Version 1.0", JOptionPane.INFORMATION_MESSAGE);
 
@@ -266,6 +270,7 @@ public class HomePage extends JFrame {
                 addProjectBtn.setVisible(false);
             }
         });
+
 
         setVisible(true);
     }
