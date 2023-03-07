@@ -102,56 +102,9 @@ public class HomePage extends JFrame {
 
 
 
-        addButton.addActionListener(new ActionListener() {          
-        public void actionPerformed(ActionEvent e) {
-            JLabel nameLabel = new JLabel("Project Name:");
-            JTextField nameField = new JTextField();
-            JLabel budgetLabel = new JLabel("Budget:");
-            JTextField budgetField = new JTextField();
-            JLabel estimateCostLabel = new JLabel("Estimate Cost:");
-            JTextField estimateCostField = new JTextField();
-            // Create the panel with the fields
-            JPanel panel = new JPanel(new GridLayout(4, 2));
-            panel.add(nameLabel);
-            panel.add(nameField);
-            panel.add(budgetLabel);
-            panel.add(budgetField);
-            panel.add(estimateCostLabel);
-            panel.add(estimateCostField);
-            
-    
-            // Show the input dialog and get the result
-            JFrame frame = new JFrame();
-            int result = JOptionPane.showConfirmDialog(frame, panel, "Add Project", JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                // Get the values from the fields
-                String name = nameField.getText();
-                double budget = Double.parseDouble(budgetField.getText());
-                double estimateCost =estimateCostField.getText().isEmpty() ? 0.0 : Double.parseDouble(estimateCostField.getText());
-                // Create the new project
-                Projects project;
-                try {
-                    project = new Projects(projectController.getNextProjectID(),user.getUserId(),name, budget, estimateCost);
-                    projectController.addProject(project);
-                     // Update the projectList with the new project
-                    projectList = projectController.getAllProjects(user.getUserId());
-                 // Clear the current listPanel and redraw it with the updated projectList
-                 listPanel.removeAll();
-                } catch (IOException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-            }
-        }
-    });
+        
   
-                removeButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        // Remove project from list   
-                        listPanel.revalidate();
-                        listPanel.repaint();
-                    }
-                });        
+               
                 listPanel.revalidate();
                 listPanel.repaint();
                 
@@ -160,6 +113,83 @@ public class HomePage extends JFrame {
      
 
         buttonPanel.add(projectsBtn);
+        
+         //Add action lister for `+` button
+        addButton.addActionListener(new ActionListener() {          
+            public void actionPerformed(ActionEvent e) {
+                JLabel nameLabel = new JLabel("Project Name:");
+                JTextField nameField = new JTextField();
+                JLabel budgetLabel = new JLabel("Budget:");
+                JTextField budgetField = new JTextField();
+                JLabel estimateCostLabel = new JLabel("Estimate Cost:");
+                JTextField estimateCostField = new JTextField();
+                // Create the panel with the fields
+                JPanel panel = new JPanel(new GridLayout(4, 2));
+                panel.add(nameLabel);
+                panel.add(nameField);
+                panel.add(budgetLabel);
+                panel.add(budgetField);
+                panel.add(estimateCostLabel);
+                panel.add(estimateCostField);
+                // Show the input dialog and get the result
+                JFrame frame = new JFrame();
+                int result = JOptionPane.showConfirmDialog(frame, panel, "Add Project", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    // Get the values from the fields
+                    String name = nameField.getText();
+                    double budget = Double.parseDouble(budgetField.getText());
+                    double estimateCost =estimateCostField.getText().isEmpty() ? 0.0 : Double.parseDouble(estimateCostField.getText());
+                    // Create the new project
+                    Projects project;
+                    try {
+                        project = new Projects(projectController.getNextProjectID(),user.getUserId(),name, budget, estimateCost);
+                        projectController.addProject(project);
+                         // Update the projectList with the new project
+                        projectList = projectController.getAllProjects(user.getUserId());
+    
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+                     
+                }
+                // Clear the current listPanel and redraw it with the updated projectList
+                for (Projects project : projectList) {
+                    JPanel projectButtonPanel = new JPanel(new BorderLayout());
+                    JButton projectButton = new JButton(project.getName());
+                    projectButton.setFont(new Font("Arial", Font.PLAIN, 16));
+                    projectButton.setPreferredSize(new Dimension(400, 50));
+                    projectButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // TODO: Display project details in a separate panel
+                        }
+                    });
+                    projectButtonPanel.add(projectButton, BorderLayout.WEST);
+
+                    scrollableList.add(projectButtonPanel);
+                }
+                scrollPane.setViewportView(scrollableList);
+                listPanel.add(scrollPane);
+
+
+
+    
+
+           
+            listPanel.revalidate();
+            listPanel.repaint();
+            
+            }
+        });
+
+        //Add action lister for `-` button
+        removeButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Remove project from list   
+                listPanel.revalidate();
+                listPanel.repaint();
+            }
+        });        
 
         // Products button
         productsBtn = new JButton("Products");

@@ -14,13 +14,9 @@ public class UserController {
         
         List<String[]> userData = csvHandler.readAll();
         this.users = new ArrayList<>();
-        boolean isFirstRow = true;
 
         for (String[] data : userData) {
-            if (isFirstRow) {
-                isFirstRow = false;
-                continue;
-            }
+            
     
             Users user = new Users(Integer.parseInt(data[0]), data[1], data[2],data[3],data[4]);
             this.users.add(user);
