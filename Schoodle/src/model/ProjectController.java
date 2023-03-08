@@ -88,7 +88,7 @@ public class ProjectController {
                 String name = projectFields[2];
                 double budget = Double.parseDouble(projectFields[3]);
                 double estimateCost = Double.parseDouble(projectFields[4]);
-                List<Expenses> expenses = ExpenseController.getExpensesForProject(projectID);
+               
     
                 if (userID == userId) {
                     Projects project = new Projects(projectID, userID, name, budget,estimateCost);
