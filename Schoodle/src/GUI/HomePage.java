@@ -26,7 +26,7 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        CSVHandler projectHandler = new CSVHandler("Schoodle/src/resources/projects.csv");
+        CSVHandler projectHandler = new CSVHandler("main/Schoodle/src/resources/projects.csv");
         ProjectController projectController = new ProjectController(projectHandler);
         projectList = projectController.getAllProjects(user.getUserId());
 
