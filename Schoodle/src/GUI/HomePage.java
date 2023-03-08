@@ -333,12 +333,22 @@ removeButton.addActionListener(new ActionListener() {
         listPanel.add(welcomeUser);
 
         menuBar = new JMenuBar();
-        JMenu aboutSection = new JMenu("About");
-        menuBar.add(aboutSection);
-        aboutSection.addSeparator();
+        JMenu settingsSection = new JMenu("Settings");
+        menuBar.add(settingsSection);
+        settingsSection.addSeparator();
         this.setJMenuBar(menuBar);
-        JMenuItem aboutItem = new JMenuItem("Schoodle Inc.");
-        aboutSection.add(aboutItem);
+        JMenuItem generalItem = new JMenuItem("General");
+        JMenuItem aboutItem = new JMenuItem("About Schoodle Inc.");
+        settingsSection.add(generalItem);
+        settingsSection.add(aboutItem);
+
+        generalItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new GeneralPage(user);
+            }
+        });
+
         aboutItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 listPanel.removeAll();
@@ -359,6 +369,8 @@ removeButton.addActionListener(new ActionListener() {
                 addProjectBtn.setVisible(false);
             }
         });
+
+
 
 
         setVisible(true);
