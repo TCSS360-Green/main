@@ -1,6 +1,6 @@
 package GUI;
 
-import model.Users;
+import model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +24,8 @@ public class GeneralPage extends JFrame implements ActionListener {
     private JButton changePasswordButton;
     private JButton changeEmailButton;
     private JButton exportButton;
+    private JButton importButton;
+
 
     GeneralPage(Users user) {
         this.user = user;
@@ -80,11 +82,13 @@ public class GeneralPage extends JFrame implements ActionListener {
         changeEmailButton = new JButton("Edit");
         changePasswordButton = new JButton("Edit");
         exportButton = new JButton("Export");
+        importButton = new JButton("Import");
         add(changeNameButton);
         add(changeUsernameButton);
         add(changeEmailButton);
         add(changePasswordButton);
         add(exportButton);
+        add(importButton);
     }
 
     private void initializeComponentBounds() {
@@ -101,7 +105,9 @@ public class GeneralPage extends JFrame implements ActionListener {
         changeUsernameButton.setBounds(400, 135, 100, 20);
         changePasswordButton.setBounds(400, 165, 100, 20);
         changeEmailButton.setBounds(400, 195, 100, 20);
-        exportButton.setBounds(30, 225, 100, 20);
+        exportButton.setBounds(30, 235, 100, 20);
+        importButton.setBounds(30, 275, 100, 20);
+        //importButton.setBounds()
     }
 
     private void addComponentListeners() {
@@ -109,6 +115,8 @@ public class GeneralPage extends JFrame implements ActionListener {
         changeUsernameButton.addActionListener(this);
         changePasswordButton.addActionListener(this);
         changeEmailButton.addActionListener(this);
+        exportButton.addActionListener(this);
+        importButton.addActionListener(this);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -140,6 +148,36 @@ public class GeneralPage extends JFrame implements ActionListener {
             emailText.setText("");
             emailLabel.setText(String.format("Email: %s", user.getEmail()));
         }
+        else if (e.getSource() == exportButton) {
+            ProfileExporter exporter = new ProfileExporter(user);
+            String exportMessage = String.format("Export ID: %s", exporter.retrieveExportSettings());
+            JOptionPane.showMessageDialog(null, exportMessage);
+        }
+        else if (e.getSource() == importButton) {
+            String importID = JOptionPane.showInputDialog(null, "Enter Import ID", "Import Profile", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                CSVHandler csvHandler = new CSVHandler("main/Schoodle/src/resources/users.csv");
+                UserController userController = new UserController(csvHandler);
+                String[] hashID = importID.split("!");
+                int idPos = Integer.parseInt(hashID[0]);
+                Users otherUser = userController.getUsers().get(idPos-1);
+                if (hashID.length == 3 && idPos <= userController.getUsers().size() && hashID[1].equals(otherUser.getFullName())) {
+                    int input = JOptionPane.showConfirmDialog(null, String.format("Save to current profile?\nName: %s\nEmail: %s", hashID[1], otherUser.getEmail()));
+                    if (input == 0) {
+                        this.user.setFullName(otherUser.getFullName());
+                        this.user.setEmail(otherUser.getEmail());
+                        nameLabel.setText(String.format("Name: %s", user.getFullName()));
+                        emailLabel.setText(String.format("Email: %s", user.getEmail()));
+                    } else {
+                        return;
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Invalid Import ID", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
     }
 
     private void initializePanel() {

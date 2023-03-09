@@ -11,14 +11,14 @@ public class UserController {
 
     public UserController(CSVHandler csvHandler) throws IOException {
         this.csvHandler = csvHandler;
-        
+
         List<String[]> userData = csvHandler.readAll();
         this.users = new ArrayList<>();
 
         for (String[] data : userData) {
-            
-    
-            Users user = new Users(Integer.parseInt(data[0]), data[1], data[2],data[3],data[4]);
+
+
+            Users user = new Users(Integer.parseInt(data[0]), data[1], data[2], data[3], data[4]);
             this.users.add(user);
         }
     }
@@ -39,12 +39,12 @@ public class UserController {
             }
         }
 
-        Users newUser = new Users(userId,username, password, fullName, email);
+        Users newUser = new Users(userId, username, password, fullName, email);
         users.add(newUser);
 
         List<String[]> data = new ArrayList<>();
         for (Users user : users) {
-            String[] userData = {  String.valueOf(user.getUserId()),user.getUsername(), user.getPassword(), user.getFullName(), user.getEmail() };
+            String[] userData = {String.valueOf(user.getUserId()), user.getUsername(), user.getPassword(), user.getFullName(), user.getEmail()};
             data.add(userData);
         }
 
@@ -52,6 +52,7 @@ public class UserController {
 
         return true;
     }
+
     public Users getUserByUsername(String username) {
         for (Users user : users) {
             if (user.getUsername().equals(username)) {
@@ -60,6 +61,7 @@ public class UserController {
         }
         return null;
     }
+
     public Users getUserByNameAndEmail(String fullName, String email) {
         for (Users user : users) {
             if (user.getFullName().equals(fullName) && user.getEmail().equals(email)) {
@@ -68,6 +70,7 @@ public class UserController {
         }
         return null;
     }
+
     public boolean login(String username, String password) {
         for (Users user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
@@ -76,5 +79,8 @@ public class UserController {
         }
         return false;
     }
-   
+
+    public List<Users> getUsers() {
+        return users;
+    }
 }
