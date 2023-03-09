@@ -30,7 +30,7 @@ public class LoginPage extends JFrame {
          
         // Title label
         titleLabel = new JLabel("Welcome to Schoodle");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setFont(new Font("", Font.BOLD, 24));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -78,7 +78,7 @@ public class LoginPage extends JFrame {
         buttonsPanel.add(loginButton,gbc);
         
     
-        CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/users.csv");
+        CSVHandler csvHandler = new CSVHandler("main/Schoodle/src/resources/users.csv");
         UserController userController = new UserController(csvHandler);
 
          

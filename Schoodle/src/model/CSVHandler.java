@@ -45,8 +45,4 @@ public class CSVHandler {
             }
         }
     }
-
-    public void exportToCSV(Users user) {
-
-    }
 }
