@@ -57,13 +57,18 @@ public class LoginPage extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(passwordField, gbc);
-
+        JLabel forgotPasswordLabel = new JLabel("Forgot Username or Password?");
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        add(forgotPasswordLabel,gbc);
         // Login and sign up buttons
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         add(buttonsPanel, gbc);
+
+       
 
         
         signUpButton = new JButton("Sign Up");
@@ -72,7 +77,7 @@ public class LoginPage extends JFrame {
         buttonsPanel.add(loginButton,gbc);
         
     
-        CSVHandler csvHandler = new CSVHandler("main/Schoodle/src/resources/users.csv");
+        CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/users.csv");
         UserController userController = new UserController(csvHandler);
 
          
@@ -84,7 +89,42 @@ public class LoginPage extends JFrame {
     JLabel emailLabel = new JLabel("Email:");
     JButton goBackButton = new JButton("Go Back");
     JButton submitButton = new JButton("Submit");
-       
+    
+    //Add mouse listener for Forgot Password button
+
+    forgotPasswordLabel.addMouseListener(new MouseAdapter() {
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Show dialog box to get full name and email
+        JPanel panel = new JPanel(new GridLayout(2, 2));
+        panel.add(new JLabel("Full Name:"));
+        JTextField fullNameField = new JTextField();
+        panel.add(fullNameField);
+        panel.add(new JLabel("Email Address:"));
+        JTextField emailField = new JTextField();
+        panel.add(emailField);
+        int result = JOptionPane.showConfirmDialog(null, panel, "Login Retrieve", JOptionPane.OK_CANCEL_OPTION);
+        if (result == JOptionPane.OK_OPTION) {
+            String fullName =fullNameField.getText();
+            String email = emailField.getText();
+            
+            if  (userController.getUserByNameAndEmail(fullName, email) == null) {
+                JOptionPane.showMessageDialog(LoginPage.this,
+                                "Info incorrectly",
+                                "Retrieve Error",
+                                JOptionPane.ERROR_MESSAGE);
+            }
+            else {
+                String username = userController.getUserByNameAndEmail(fullName, email).getUsername();
+                String password = userController.getUserByNameAndEmail(fullName, email).getPassword();
+                JOptionPane.showMessageDialog(LoginPage.this,
+                                "Username: "+username+"\n"+"Password: "+password ,
+                                "Your login info",
+                                JOptionPane.DEFAULT_OPTION);
+            }
+        }
+    }
+});
     // Add action listeners to buttons
     loginButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -114,9 +154,11 @@ public class LoginPage extends JFrame {
         
     signUpButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+            
             titleLabel.setText("Create an account");
             usernameField.setText("");
             passwordField.setText("");
+            remove(forgotPasswordLabel);
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(10, 10, 10, 10);
             gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -154,7 +196,6 @@ public class LoginPage extends JFrame {
             gbc.gridx = 1;
             gbc.gridy = 4;
             add(passwordField, gbc);
-
             buttonsPanel.remove(loginButton);
             buttonsPanel.remove(signUpButton);
             buttonsPanel.add(goBackButton);
@@ -228,10 +269,42 @@ public class LoginPage extends JFrame {
         remove(fullNameField);
         remove(emailLabel);
         remove(emailField);
+        remove(usernameField);
+        remove(usernameLabel);
+        remove(passwordLabel);
+        remove(passwordField);
+        GridBagConstraints gbc = new GridBagConstraints();
+            gbc.insets = new Insets(10, 10, 10, 10);
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+
+            gbc.gridx = 0;
+            gbc.gridy = 1;
+            gbc.gridwidth = 1;
+            add(usernameLabel, gbc);
+    
+           
+            gbc.gridx = 1;
+            gbc.gridy = 1;
+            add(usernameField, gbc);
+    
+            
+            gbc.gridx = 0;
+            gbc.gridy = 2;
+            add(passwordLabel, gbc);
+    
+        
+            gbc.gridx = 1;
+            gbc.gridy = 2;
+            add(passwordField, gbc);
+            gbc.gridx = 1;
+            gbc.gridy = 3;
+            add(forgotPasswordLabel,gbc);
+
         buttonsPanel.remove(submitButton);
         buttonsPanel.remove(goBackButton);
         buttonsPanel.add(signUpButton);
         buttonsPanel.add(loginButton);
+        
         setSize(getWidth(), getHeight() - 60);
     
         }

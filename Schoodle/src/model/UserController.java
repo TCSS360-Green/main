@@ -60,6 +60,14 @@ public class UserController {
         }
         return null;
     }
+    public Users getUserByNameAndEmail(String fullName, String email) {
+        for (Users user : users) {
+            if (user.getFullName().equals(fullName) && user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
     public boolean login(String username, String password) {
         for (Users user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
