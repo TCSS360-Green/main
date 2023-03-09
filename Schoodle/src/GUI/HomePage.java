@@ -96,12 +96,28 @@ public class HomePage extends JFrame {
                             // TODO: Display project details in a separate panel
                         }
                     });
+                    scrollableList.removeAll();
                 }
                 if (projectList.isEmpty()) {
                     listPanel.add(noProjectsLabel);
                 } else {
+                    for (Projects project : projectList) {
+                        JButton projectButton = new JButton(project.getName());
+                        projectButton.setFont(new Font("Arial", Font.PLAIN, 16));
+                        projectButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+                        projectButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        projectButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Display project details in a separate panel
+                            }
+                            
+                        });
+                        scrollableList.add(projectButton);
+                    }
+                    
                     scrollPane.setViewportView(scrollableList);
                     listPanel.add(scrollPane);
+                    
                 }
                 listPanel.revalidate();
                 listPanel.repaint();
