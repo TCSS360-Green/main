@@ -330,7 +330,7 @@ public class HomePage extends JFrame {
                 JTextField nameField = new JTextField();
                 JLabel priceLabel = new JLabel("Price:");
                 JTextField priceField = new JTextField();
-                JLabel dateLabel = new JLabel("Warranty Date: (yyyy-MM-dd)");
+                JLabel dateLabel = new JLabel("Warranty Date (mm/dd/yyyy): ");
                 JTextField dateField = new JTextField();
                 // Create the panel with the fields
                 JPanel panel = new JPanel(new GridLayout(4, 2));

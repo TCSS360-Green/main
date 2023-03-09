@@ -40,7 +40,7 @@ public class GeneralPage extends JFrame implements ActionListener {
     private void initializeFrame() {
         this.setTitle("Profile");
         this.setLayout(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.setSize(600,400);
     }
 
