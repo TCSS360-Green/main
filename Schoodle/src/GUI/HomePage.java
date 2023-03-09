@@ -1,6 +1,8 @@
 package GUI;
 
 import model.CSVHandler;
+import model.ProductController;
+import model.Products;
 import model.ProjectController;
 import model.Projects;
 import model.Users;
@@ -8,6 +10,7 @@ import model.Users;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -17,10 +20,10 @@ public class HomePage extends JFrame {
     private JTextField searchField;
     private JPanel listPanel;
     private List<Projects> projectList;
-    private boolean projectsDisplayed;
+    private List<Products> productList;
     JMenuBar menuBar;
 
-    public HomePage(Users user) throws IOException {
+    public HomePage(Users user) throws IOException, ParseException {
         setTitle("Schoodle: Home Project And Appliance Organizer");
         setSize(800, 600);
         setLocationRelativeTo(null);
@@ -29,6 +32,10 @@ public class HomePage extends JFrame {
         CSVHandler projectHandler = new CSVHandler("Schoodle/src/resources/projects.csv");
         ProjectController projectController = new ProjectController(projectHandler);
         projectList = projectController.getAllProjects(user.getUserId());
+
+        CSVHandler productHandler = new CSVHandler("Schoodle/src/resources/products.csv");
+        ProductController productController = new ProductController(productHandler);
+        productList = productController.getAllProducts(user.getUserId());
 
         // Create top panel with buttons and search field
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -86,18 +93,7 @@ public class HomePage extends JFrame {
                 addRemovePanel.add(addButton);
                 addRemovePanel.add(removeButton);
                 listPanel.add(addRemovePanel, BorderLayout.NORTH);
-                for (Projects project : projectList) {
-                    JButton projectButton = new JButton(project.getName());
-                    projectButton.setFont(new Font("Arial", Font.PLAIN, 16));
-                    projectButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-                    projectButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-                    projectButton.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // TODO: Display project details in a separate panel
-                        }
-                    });
                     scrollableList.removeAll();
-                }
                 if (projectList.isEmpty()) {
                     listPanel.add(noProjectsLabel);
                 } else {
@@ -166,14 +162,14 @@ public class HomePage extends JFrame {
                         projectButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                         projectButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                // TODO: Display project details in a separate panel
+                             
                             }
                         });
                         scrollableList.add(projectButton);
                         scrollPane.setViewportView(scrollableList);
                         scrollPane.getViewport().setPreferredSize(new Dimension(800, viewportHeight));
                     } catch (IOException e1) {
-                        // TODO Auto-generated catch block
+                        
                         System.out.println("couldnt add");
                         e1.printStackTrace();
                     }
@@ -255,67 +251,237 @@ public class HomePage extends JFrame {
                 }
             }
         });
+
         // Products button
+
+        // Create Panel for `+` and `-` buttons:
+        JPanel addRemoveProductPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        addRemoveProductPanel.setPreferredSize(new Dimension(400, 40));
+        
+        // Create "+" button to add project
+        JButton addProduct = new JButton("+");
+        addProduct.setToolTipText("Add a new project");
+        addProduct.setFont(new Font("Arial", Font.BOLD, 25));
+        addProduct.setForeground(Color.RED);
+        addProduct.setPreferredSize(new Dimension(40, 40));
+        // Create "-" button to remove project
+        JButton removeProduct = new JButton("-");
+        removeProduct.setToolTipText("Remove selected project");
+        removeProduct.setFont(new Font("Arial", Font.BOLD, 25));
+        removeProduct.setForeground(Color.RED);
+        removeProduct.setPreferredSize(new Dimension(40, 40));
+        //no label
+        // Display "There is no projects to display" message
+        JLabel noProductLabel = new JLabel("There is no products to display");
+        noProductLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        // Create a scrollable list of project buttons
+        JScrollPane scrollPanel = new JScrollPane();
+        scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JPanel scrollableList2 = new JPanel();
+        scrollableList2.setLayout(new BoxLayout(scrollableList2, BoxLayout.Y_AXIS));
+        scrollableList2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+
         productsBtn = new JButton("Products");
         productsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO: Replace draft with actual products
                 listPanel.removeAll();
+                addRemoveProductPanel.add(addProduct);
+                addRemoveProductPanel.add(removeProduct);
+                listPanel.add(addRemoveProductPanel, BorderLayout.NORTH);
 
-                // Add project list items to listPanel
-                String[] productNames = { "Product 1", "Product 2", "Product 3", "Product 4", "Product 5", "Product 6",
-                        "Product 7", "Product 8", "Product 9", "Product 10" };
-
-                // Create a scrollable list of project buttons
-                JScrollPane scrollPane = new JScrollPane();
-                scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-                scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                JPanel scrollableList = new JPanel(new GridLayout(0, 1, 0, 10));
-
-                for (String productName : productNames) {
-                    JButton button = new JButton(productName);
-                    button.setFont(new Font("Arial", Font.PLAIN, 16));
-                    button.setPreferredSize(new Dimension(400, 50));
-                    button.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            // TODO: Handle click on project button
-                        }
-                    });
-                    scrollableList.add(button);
+                scrollableList2.removeAll();
+                if (productList.isEmpty()) {
+                    listPanel.add(noProductLabel);
+                } else {
+                    for (Products product : productList) {
+                        JButton productButton = new JButton(product.getProductName());
+                        productButton.setFont(new Font("Arial", Font.PLAIN, 16));
+                        productButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+                        productButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        productButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Display project details in a separate panel
+                            }
+                            
+                        });
+                        scrollableList2.add(productButton);
+                    }
+                    
+                    scrollPanel.setViewportView(scrollableList2);
+                    listPanel.add(scrollPanel);
+                    
                 }
-                scrollPane.setViewportView(scrollableList);
-                listPanel.add(scrollPane);
-
                 listPanel.revalidate();
                 listPanel.repaint();
-                addProjectBtn.setVisible(false);
             }
         });
         buttonPanel.add(productsBtn);
-
+        topPanel.add(buttonPanel, BorderLayout.WEST);
         topPanel.add(buttonPanel, BorderLayout.WEST);
 
-        topPanel.add(buttonPanel, BorderLayout.WEST);
 
-        // Search field
-        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        searchField = new JTextField(20);
-        searchField.addActionListener(new ActionListener() {
+         // Add action lister for `+` button
+         addProduct.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // String searchQuery = searchField.getText();
-                // TODO: Filter project or product list based on search query
+                JLabel nameLabel = new JLabel("Product Name:");
+                JTextField nameField = new JTextField();
+                JLabel priceLabel = new JLabel("Price:");
+                JTextField priceField = new JTextField();
+                JLabel dateLabel = new JLabel("Warranty Date: (yyyy-MM-dd)");
+                JTextField dateField = new JTextField();
+                // Create the panel with the fields
+                JPanel panel = new JPanel(new GridLayout(4, 2));
+                panel.add(nameLabel);
+                panel.add(nameField);
+                panel.add(priceLabel);
+                panel.add(priceField);
+                panel.add(dateLabel);
+                panel.add(dateField);
+                // Show the input dialog and get the result
+                JFrame frame = new JFrame();
+                int result = JOptionPane.showConfirmDialog(frame, panel, "Add Product", JOptionPane.OK_CANCEL_OPTION);
+                if (result == JOptionPane.OK_OPTION) {
+                    // Get the values from the fields
+                    String name = nameField.getText();
+                    double price = Double.parseDouble(priceField.getText());
+                    String warrantyDate = dateField.getText();
+                    
+                    
+                    // Create the new project
+                    Products product;
+                    try {
+                        product = new Products(productController.getNextProductID(), user.getUserId(), name, price,warrantyDate);
+                        productController.addProduct(product);
+                       
+                        productList = productController.getAllProducts(user.getUserId());
+                        // Create a new button for the newly added project
+                        JButton producButton = new JButton(product.getProductName());
+                        producButton.setFont(new Font("Arial", Font.PLAIN, 16));
+                        producButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+                        producButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        producButton.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Display project details in a separate panel
+                            }
+                        });
+                        scrollableList2.add(producButton);
+                        scrollPanel.setViewportView(scrollableList2);
+                        scrollPanel.getViewport().setPreferredSize(new Dimension(800, viewportHeight));
+                    } catch (IOException e1) {
+                        // TODO Auto-generated catch block
+                        System.out.println("couldnt add");
+                        e1.printStackTrace();
+                    }
+
+                }
+                // Update the listPanel with the scrollable list
+                listPanel.removeAll();
+                listPanel.add(addRemoveProductPanel, BorderLayout.NORTH);
+                listPanel.add(scrollPanel);
+
+                listPanel.revalidate();
+                listPanel.repaint();
+
             }
         });
-        searchPanel.add(searchField);
+        // Add action listener for `-` button
+        removeProduct.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Get the list of project names
+                List<String> productNames = new ArrayList<String>();
+                Component[] components = scrollableList2.getComponents();
+                for (Component component : components) {
+                    if (component instanceof JButton) {
+                        JButton button = (JButton) component;
+                        productNames.add(button.getText());
+                    }
+                }
 
+                // Show a dialog to ask the user which project to remove
+                String selectedProduct = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Which product would you like to remove?",
+                        "Remove Product",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        productNames.toArray(),
+                        productNames.get(0));
+
+                // Find the project in the project list and remove it
+                for (int i = 0; i < productList.size(); i++) {
+                    Products product = productList.get(i);
+                    if (product.getProductName().equals(selectedProduct)) {
+                        try {
+                            productController.deleteProduct(product.getUserId());
+                        } catch (IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                        productList.remove(i);
+
+                        break;
+                    }
+                }
+
+                // Remove the selected project button
+                Component[] listComponents = scrollableList2.getComponents();
+                for (Component component : listComponents) {
+                    if (component instanceof JButton) {
+                        JButton button = (JButton) component;
+                        if (button.getText().equals(selectedProduct)) {
+                            scrollableList2.remove(button);
+                            break;
+                        }
+                    }
+                }
+                if (productList.isEmpty()) {
+
+                    listPanel.removeAll();
+                    listPanel.add(addRemoveProductPanel);
+                    listPanel.add(noProductLabel);
+                    listPanel.revalidate();
+                    listPanel.repaint();
+                } else {
+
+                    // Revalidate and repaint the scrollableList
+                    scrollableList2.revalidate();
+                    scrollableList2.repaint();
+                }
+            }
+        });
+        // Logout field
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        
+        
+        JButton logOutBtn = new JButton("Log Out");
+        logOutBtn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            setVisible(false);
+            dispose();
+        
+            // Open the LoginPage GUI
+            LoginPage loginPage=null;
+            try {
+                loginPage = new LoginPage();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            loginPage.setVisible(true);
+             }
+        });
+        searchPanel.add(logOutBtn);
         // Settings button
         JButton settingsBtn = new JButton(new ImageIcon("settings.png"));
         settingsBtn.setBorderPainted(false);
         settingsBtn.setContentAreaFilled(false);
         settingsBtn.setFocusPainted(false);
-        searchPanel.add(settingsBtn);
+        // searchPanel.add(settingsBtn);
 
-        topPanel.add(searchPanel, BorderLayout.EAST);
+       topPanel.add(searchPanel, BorderLayout.EAST);
 
         add(topPanel, BorderLayout.NORTH);
 
@@ -373,7 +539,4 @@ public class HomePage extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) throws IOException {
-        new HomePage(null);
-    }
 }

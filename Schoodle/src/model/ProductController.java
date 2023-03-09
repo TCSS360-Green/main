@@ -7,80 +7,76 @@ import java.util.Date;
 import java.util.List;
 
 public class ProductController {
-    private List<Products> products;
     private CSVHandler csvHandler;
 
-    public ProductController(CSVHandler csvHandler) throws IOException, ParseException {
+    public ProductController(CSVHandler csvHandler) {
         this.csvHandler = csvHandler;
+    }
+    public int getNextProductID() throws IOException {
         List<String[]> data = csvHandler.readAll();
-        this.products = new ArrayList<>();
-        for (String[] productData : data) {
-            int productId = Integer.parseInt(productData[0]);
-            String productName = productData[1];
-            double price = Double.parseDouble(productData[2]);
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date warrantyDate = dateFormat.parse(productData[3]);
-            Products product = new Products(productId, productName, price, warrantyDate);
-            products.add(product);
-        }
-    }
-
-    public void addProduct(String productName, double price, Date warrantyDate) throws IOException {
-        int maxId = 0;
-        for (Products product : products) {
-            if (product.getProductId() > maxId) {
-                maxId = product.getProductId();
+        int maxProductID = 9999; // start projectID at 1000
+        for (String[] row : data) {
+            int currentId = Integer.parseInt(row[1]);
+            if (currentId > maxProductID) {
+                maxProductID = currentId;
             }
         }
-
-        Products newProduct = new Products(maxId + 1, productName, price, warrantyDate);
-        products.add(newProduct);
-
-        List<String[]> data = new ArrayList<>();
-        for (Products product : products) {
-            String[] productData = { Integer.toString(product.getProductId()), product.getProductName(),
-                    Double.toString(product.getPrice()), product.getWarrantyDate().toString() };
-            data.add(productData);
-        }
-
-        csvHandler.writeAll(data);
+        return maxProductID + 1;
     }
 
-    public void updateProduct(int productId, String productName, double price, Date warrantyDate) throws IOException {
-        for (Products product : products) {
-            if (product.getProductId() == productId) {
-                product.setProductName(productName);
-                product.setPrice(price);
-                product.setWarrantyDate(warrantyDate);
-                break;
-            }
-        }
-
-        List<String[]> data = new ArrayList<>();
-        for (Products product : products) {
-            String[] productData = { Integer.toString(product.getProductId()), product.getProductName(),
-                    Double.toString(product.getPrice()), product.getWarrantyDate().toString() };
-            data.add(productData);
-        }
-
+    public void addProduct(Products addProduct) throws IOException {
+        
+        List<String[]> data = csvHandler.readAll();
+        String[] newProduct = { Integer.toString(addProduct.getProductId()),Integer.toString(addProduct.getUserId()), addProduct.getProductName(),
+            Double.toString(addProduct.getPrice()), addProduct.getWarrantyDate().toString() };
+        data.add(newProduct);
         csvHandler.writeAll(data);
+
     }
 
     public void deleteProduct(int productId) throws IOException {
-        for (int i = 0; i < products.size(); i++) {
-            if (products.get(i).getProductId() == productId) {
-                products.remove(i);
-                break;
+        List<String[]> data = csvHandler.readAll();
+
+        for (int i = 0; i < data.size(); i++) {
+            String[] row = data.get(i);
+            int currentId = Integer.parseInt(row[0]);
+
+            if (currentId == productId) {
+                data.remove(i);
+                csvHandler.writeAll(data);
+                return;
+            }
+        } 
+         
+    }
+
+    public List<Products> getAllProducts(int userId) throws IOException {
+        List<String[]> productData = null;
+        try {
+            productData = csvHandler.readAll();
+        } catch (IOException e) {
+            // Handle IO exception
+            e.printStackTrace();
+        }
+    
+        List<Products> products = new ArrayList<>();
+    
+        if (productData != null) {
+            for (String[] productFields : productData) {
+                int productID = Integer.parseInt(productFields[0]);
+                int userID = Integer.parseInt(productFields[1]);
+                String name = productFields[2];
+                double price = Double.parseDouble(productFields[3]);
+                String warrantyDate = productFields[4];
+                
+    
+                if (userID == userId) {
+                    Products product = new Products(productID, userID, name, price,warrantyDate);
+                    products.add(product);
+                }
             }
         }
-
-        List<String[]> data = new ArrayList<>();
-        for (Products product : products) {
-            String[] productData = { Integer.toString(product.getProductId()), product.getProductName(),
-                    Double.toString(product.getPrice()), product.getWarrantyDate().toString() };
-            data.add(productData);
-        }
-
-        csvHandler.writeAll(data);
+    
+        return products;
     }
 }

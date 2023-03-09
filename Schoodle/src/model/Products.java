@@ -2,18 +2,26 @@ package model;
 import java.util.Date;
 
 public class Products {
+    private int userID;
     private int productId;
     private String productName;
     private double price;
-    private Date warrantyDate;
+    private String warrantyDate;
 
-    public Products(int productId, String productName, double price, Date warrantyDate) {
+    public Products(int productId,int userID, String productName, double price, String warrantyDate) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.warrantyDate = warrantyDate;
+        this.userID = userID;
+    }
+    public int getUserId() {
+        return userID;
     }
 
+    public void setUserId(int userID) {
+        this.userID = userID;
+    }
     public int getProductId() {
         return productId;
     }
@@ -38,11 +46,11 @@ public class Products {
         this.price = price;
     }
 
-    public Date getWarrantyDate() {
+    public String getWarrantyDate() {
         return warrantyDate;
     }
 
-    public void setWarrantyDate(Date warrantyDate) {
+    public void setWarrantyDate(String warrantyDate) {
         this.warrantyDate = warrantyDate;
     }
 

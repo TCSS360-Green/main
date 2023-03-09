@@ -7,6 +7,7 @@ import model.UserController;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.text.ParseException;
 
 public class LoginPage extends JFrame {
     private JLabel titleLabel;
@@ -138,7 +139,7 @@ public class LoginPage extends JFrame {
                     dispose();
                     try {
                         HomePage homePageGUI = new HomePage(userController.getUserByUsername(username));
-                    } catch (IOException e1) {
+                    } catch (IOException | ParseException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
                     }
@@ -209,7 +210,7 @@ public class LoginPage extends JFrame {
 
         }
     });
-
+    
      submitButton.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
                         String fullName = fullNameField.getText();
@@ -318,7 +319,12 @@ public class LoginPage extends JFrame {
     }
     
 
-    public static void main(String[] args) throws IOException {
-        new LoginPage();
+    public static void main(String[] args)  {
+        try {
+            new LoginPage();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
