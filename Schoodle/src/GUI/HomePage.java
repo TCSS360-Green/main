@@ -17,7 +17,6 @@ public class HomePage extends JFrame {
     private JTextField searchField;
     private JPanel listPanel;
     private List<Projects> projectList;
-    private boolean projectsDisplayed;
     JMenuBar menuBar;
 
     public HomePage(Users user) throws IOException {
@@ -40,9 +39,12 @@ public class HomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // TODO: Implement dashboard view
                 listPanel.removeAll();
+                //adding logo
+                JLabel logo = new JLabel("", (new ImageIcon("Schoodle/src/resources/logo.png")), SwingConstants.CENTER); 
+                listPanel.add(logo);
+                
                 listPanel.revalidate();
                 listPanel.repaint();
-                addProjectBtn.setVisible(false);
             }
         });
         buttonPanel.add(dashboardBtn);
@@ -110,14 +112,11 @@ public class HomePage extends JFrame {
                             public void actionPerformed(ActionEvent e) {
                                 // TODO: Display project details in a separate panel
                             }
-                            
                         });
                         scrollableList.add(projectButton);
-                    }
-                    
+                    }  
                     scrollPane.setViewportView(scrollableList);
-                    listPanel.add(scrollPane);
-                    
+                    listPanel.add(scrollPane);    
                 }
                 listPanel.revalidate();
                 listPanel.repaint();
