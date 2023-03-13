@@ -156,7 +156,7 @@ public class GeneralPage extends JFrame implements ActionListener {
         else if (e.getSource() == importButton) {
             String importID = JOptionPane.showInputDialog(null, "Enter Import ID", "Import Profile", JOptionPane.INFORMATION_MESSAGE);
             try {
-                CSVHandler csvHandler = new CSVHandler("main/Schoodle/src/resources/users.csv");
+                CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/users.csv");
                 UserController userController = new UserController(csvHandler);
                 String[] hashID = importID.split("!");
                 int idPos = Integer.parseInt(hashID[0]);

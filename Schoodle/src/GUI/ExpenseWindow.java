@@ -2,7 +2,9 @@ package GUI;
 
 import javax.swing.*;
 
+import model.CSVHandler;
 import model.ExpenseController;
+import model.Expenses;
 import model.Projects;
 
 import java.awt.*;
@@ -19,12 +21,13 @@ public class ExpenseWindow extends JDialog {
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
-        JPanel panel = new JPanel(new GridLayout(4, 2));
+        
+        JPanel panel = new JPanel(new GridLayout(4, 8));
         JLabel amountLabel = new JLabel("Amount:");
         amountField = new JTextField();
         JLabel descriptionLabel = new JLabel("Description:");
         descriptionField = new JTextField();
-        JLabel dateLabel = new JLabel("Date:");
+        JLabel dateLabel = new JLabel("Date (mm/dd/yyyy):");
         dateField = new JTextField();
         JButton okButton = new JButton("OK");
         JButton cancelButton = new JButton("Cancel");
@@ -38,6 +41,8 @@ public class ExpenseWindow extends JDialog {
         panel.add(okButton);
         panel.add(cancelButton);
 
+        CSVHandler csvHandler = new CSVHandler("Schoodle/src/resources/expenses.csv");
+        ExpenseController expenseController = new ExpenseController(csvHandler);
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,8 +54,10 @@ public class ExpenseWindow extends JDialog {
                     JOptionPane.showMessageDialog(ExpenseWindow.this, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else {
                     double amount = Double.parseDouble(amountText);
+                    
+                    Expenses addedExpense = new Expenses(project.getProjectId(), amount, description, date);
                     try {
-                        ExpenseController.addExpense(project.getProjectId(),amount, description, date);
+                        expenseController.addExpense(project.getProjectId(),addedExpense);
                         dispose();
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(ExpenseWindow.this, "An error occurred while adding the expense.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -68,6 +75,6 @@ public class ExpenseWindow extends JDialog {
 
         add(panel);
         pack();
-        setLocationRelativeTo(null);
+      
     }
 }

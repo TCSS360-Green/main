@@ -1,6 +1,7 @@
 package GUI;
 
 import model.CSVHandler;
+import model.ExpenseController;
 import model.ProductController;
 import model.Products;
 import model.ProjectController;
@@ -16,12 +17,16 @@ import java.util.List;
 import javax.swing.*;
 
 public class HomePage extends JFrame {
-    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn;
-    private JTextField searchField;
-    private JPanel listPanel;
+    private JButton dashboardBtn, projectsBtn, productsBtn, addProjectBtn,addProjectButton,removeProjectButton;
+    private JPanel listPanel,addRemovePanel,scrollableList;
+    private JScrollPane scrollPane;
     private List<Projects> projectList;
     private List<Products> productList;
-    JMenuBar menuBar;
+    private JMenuBar menuBar;
+    private CSVHandler projectHandler,productHandler,expenseHandler;
+    private ProjectController projectController;
+    private ProductController productController;
+    private ExpenseController expenseController;
 
     public HomePage(Users user) throws IOException, ParseException {
         setTitle("Schoodle: Home Project And Appliance Organizer");
@@ -29,14 +34,16 @@ public class HomePage extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        CSVHandler projectHandler = new CSVHandler("Schoodle/src/resources/projects.csv");
-        ProjectController projectController = new ProjectController(projectHandler);
+        projectHandler = new CSVHandler("Schoodle/src/resources/projects.csv");
+        projectController = new ProjectController(projectHandler);
         projectList = projectController.getAllProjects(user.getUserId());
 
-        CSVHandler productHandler = new CSVHandler("Schoodle/src/resources/products.csv");
-        ProductController productController = new ProductController(productHandler);
+        productHandler = new CSVHandler("Schoodle/src/resources/products.csv");
+        productController = new ProductController(productHandler);
         productList = productController.getAllProducts(user.getUserId());
 
+        expenseHandler = new CSVHandler("Schoodle/src/resources/expenses.csv");
+        expenseController = new ExpenseController(expenseHandler);
         // Create top panel with buttons and search field
         JPanel topPanel = new JPanel(new BorderLayout());
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
@@ -61,29 +68,29 @@ public class HomePage extends JFrame {
          * Project buttons element prep
          */
         // Create Panel for `+` and `-` buttons:
-        JPanel addRemovePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        addRemovePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         addRemovePanel.setPreferredSize(new Dimension(400, 40));
         // Create "+" button to add project
-        JButton addButton = new JButton("+");
-        addButton.setToolTipText("Add a new project");
-        addButton.setFont(new Font("Arial", Font.BOLD, 25));
-        addButton.setForeground(Color.RED);
-        addButton.setPreferredSize(new Dimension(40, 40));
+        addProjectButton = new JButton("+");
+        addProjectButton.setToolTipText("Add a new project");
+        addProjectButton.setFont(new Font("Arial", Font.BOLD, 25));
+        addProjectButton.setForeground(Color.RED);
+        addProjectButton.setPreferredSize(new Dimension(40, 40));
         // Create "-" button to remove project
-        JButton removeButton = new JButton("-");
-        removeButton.setToolTipText("Remove selected project");
-        removeButton.setFont(new Font("Arial", Font.BOLD, 25));
-        removeButton.setForeground(Color.RED);
-        removeButton.setPreferredSize(new Dimension(40, 40));
+        removeProjectButton = new JButton("-");
+        removeProjectButton.setToolTipText("Remove selected project");
+        removeProjectButton.setFont(new Font("Arial", Font.BOLD, 25));
+        removeProjectButton.setForeground(Color.RED);
+        removeProjectButton.setPreferredSize(new Dimension(40, 40));
         // Display "There is no projects to display" message
         JLabel noProjectsLabel = new JLabel("There is no projects to display");
         noProjectsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         int viewportHeight = Math.min(10, projectList.size()) * 50; // Assuming a button height of 50 pixels
         // Create a scrollable list of project buttons
-        JScrollPane scrollPane = new JScrollPane();
+        scrollPane = new JScrollPane();
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        JPanel scrollableList = new JPanel();
+        scrollableList = new JPanel();
         scrollableList.setLayout(new BoxLayout(scrollableList, BoxLayout.Y_AXIS));
         scrollableList.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -93,8 +100,8 @@ public class HomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 listPanel.removeAll();
                 // add + and - button
-                addRemovePanel.add(addButton);
-                addRemovePanel.add(removeButton);
+                addRemovePanel.add(addProjectButton);
+                addRemovePanel.add(removeProjectButton);
                 listPanel.add(addRemovePanel, BorderLayout.NORTH);
                     scrollableList.removeAll();
                 if (projectList.isEmpty()) {
@@ -107,9 +114,66 @@ public class HomePage extends JFrame {
                         projectButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                         projectButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                // TODO: Display project details in a separate panel
-                            }
-                        });
+                                JPanel detailsPanel = new JPanel(new GridLayout(6, 2));
+        
+        // Add project details
+        JLabel nameLabel = new JLabel("Project Name:");
+        JLabel nameValue = new JLabel(project.getName());
+        detailsPanel.add(nameLabel);
+        detailsPanel.add(nameValue);
+        
+        JLabel budgetLabel = new JLabel("Budget:");
+        JLabel budgetValue = new JLabel(String.format("$%.2f", project.getBudget()));
+        detailsPanel.add(budgetLabel);
+        detailsPanel.add(budgetValue);
+        
+        JLabel estimateCostLabel = new JLabel("Estimate Cost:");
+        JLabel estimateCostValue = new JLabel(String.format("$%.2f", project.getEstimateCost()));
+        detailsPanel.add(estimateCostLabel);
+        detailsPanel.add(estimateCostValue);
+    
+        double totalExpenses = 0.0;
+        double budgetVsExpenses = 0.0;
+        try {
+            totalExpenses = expenseController.getTotalExpensesByProjectId(project.getProjectId());
+            budgetVsExpenses = expenseController.getBudgetVsExpenses(project);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        
+        JLabel expensesLabel = new JLabel("Total Expenses:");
+        JLabel expensesValue = new JLabel(String.format("$%.2f", totalExpenses));
+        detailsPanel.add(expensesLabel);
+        detailsPanel.add(expensesValue);
+        
+        JLabel budgetVsExpensesLabel = new JLabel("Budget vs Expenses:");
+        JLabel budgetVsExpensesValue = new JLabel(String.format("$%.2f", budgetVsExpenses));
+        detailsPanel.add(budgetVsExpensesLabel);
+        detailsPanel.add(budgetVsExpensesValue);
+        
+        // Add button to open ExpenseWindow
+        JButton addExpenseButton = new JButton("Add Expense");
+        addExpenseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ExpenseWindow expenseWindow = new ExpenseWindow(project);
+                expenseWindow.setVisible(true);
+                // Update expense details when expense window is closed
+                expenseWindow.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        updateExpenseDetails(expensesValue, budgetVsExpensesValue, project);
+                    }
+                });
+            }
+        });
+        detailsPanel.add(new JLabel());
+        detailsPanel.add(addExpenseButton);
+        updateExpenseDetails(expensesValue, budgetVsExpensesValue, project);
+        // Display details in a separate panel
+        JOptionPane.showMessageDialog(null, detailsPanel, "Project Details", JOptionPane.PLAIN_MESSAGE);
+    }
+});
                         scrollableList.add(projectButton);
                     }  
                     scrollPane.setViewportView(scrollableList);
@@ -122,7 +186,7 @@ public class HomePage extends JFrame {
         buttonPanel.add(projectsBtn);
 
         // Add action lister for `+` button
-        addButton.addActionListener(new ActionListener() {
+        addProjectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JLabel nameLabel = new JLabel("Project Name:");
                 JTextField nameField = new JTextField();
@@ -162,7 +226,64 @@ public class HomePage extends JFrame {
                         projectButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                         projectButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                             
+                                JPanel detailsPanel = new JPanel(new GridLayout(6, 2));
+        
+                                // Add project details
+                                JLabel nameLabel = new JLabel("Project Name:");
+                                JLabel nameValue = new JLabel(project.getName());
+                                detailsPanel.add(nameLabel);
+                                detailsPanel.add(nameValue);
+                                
+                                JLabel budgetLabel = new JLabel("Budget:");
+                                JLabel budgetValue = new JLabel(String.format("$%.2f", project.getBudget()));
+                                detailsPanel.add(budgetLabel);
+                                detailsPanel.add(budgetValue);
+                                
+                                JLabel estimateCostLabel = new JLabel("Estimate Cost:");
+                                JLabel estimateCostValue = new JLabel(String.format("$%.2f", project.getEstimateCost()));
+                                detailsPanel.add(estimateCostLabel);
+                                detailsPanel.add(estimateCostValue);
+                            
+                                double totalExpenses = 0.0;
+                                double budgetVsExpenses = 0.0;
+                                try {
+                                    totalExpenses = expenseController.getTotalExpensesByProjectId(project.getProjectId());
+                                    budgetVsExpenses = expenseController.getBudgetVsExpenses(project);
+                                } catch (IOException ex) {
+                                    ex.printStackTrace();
+                                }
+                                
+                                JLabel expensesLabel = new JLabel("Total Expenses:");
+                                JLabel expensesValue = new JLabel(String.format("$%.2f", totalExpenses));
+                                detailsPanel.add(expensesLabel);
+                                detailsPanel.add(expensesValue);
+                                
+                                JLabel budgetVsExpensesLabel = new JLabel("Budget vs Expenses:");
+                                JLabel budgetVsExpensesValue = new JLabel(String.format("$%.2f", budgetVsExpenses));
+                                detailsPanel.add(budgetVsExpensesLabel);
+                                detailsPanel.add(budgetVsExpensesValue);
+                                
+                                // Add button to open ExpenseWindow
+                                JButton addExpenseButton = new JButton("Add Expense");
+                                addExpenseButton.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        ExpenseWindow expenseWindow = new ExpenseWindow(project);
+                                        expenseWindow.setVisible(true);
+                                        // Update expense details when expense window is closed
+                                        expenseWindow.addWindowListener(new WindowAdapter() {
+                                            @Override
+                                            public void windowClosed(WindowEvent e) {
+                                                updateExpenseDetails(expensesValue, budgetVsExpensesValue, project);
+                                            }
+                                        });
+                                    }
+                                });
+                                detailsPanel.add(new JLabel());
+                                detailsPanel.add(addExpenseButton);
+                                updateExpenseDetails(expensesValue, budgetVsExpensesValue, project);
+                                // Display details in a separate panel
+                                JOptionPane.showMessageDialog(null, detailsPanel, "Project Details", JOptionPane.PLAIN_MESSAGE);
                             }
                         });
                         scrollableList.add(projectButton);
@@ -187,7 +308,7 @@ public class HomePage extends JFrame {
         });
 
         // Add action listener for `-` button
-        removeButton.addActionListener(new ActionListener() {
+        removeProjectButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Get the list of project names
                 List<String> projectNames = new ArrayList<String>();
@@ -286,7 +407,7 @@ public class HomePage extends JFrame {
         productsBtn = new JButton("Products");
         productsBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: Replace draft with actual products
+                
                 listPanel.removeAll();
                 addRemoveProductPanel.add(addProduct);
                 addRemoveProductPanel.add(removeProduct);
@@ -303,9 +424,29 @@ public class HomePage extends JFrame {
                         productButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                         productButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                // TODO: Display project details in a separate panel
-                            }
+                                JPanel detailsPanel = new JPanel(new GridLayout(3, 2));
+        
+                                // Add project details
+                                JLabel nameLabel = new JLabel("Product Name:");
+                                JLabel nameValue = new JLabel(product.getProductName());
+                                detailsPanel.add(nameLabel);
+                                detailsPanel.add(nameValue);
+                                
+                                JLabel priceLabel = new JLabel("Price:");
+                                JLabel   priceValue = new JLabel(String.format("$%.2f", product.getPrice()));
+                                detailsPanel.add(priceLabel);
+                                detailsPanel.add(priceValue);
+                                
+                                JLabel warrantyDateLabel = new JLabel("Warranty Date:");
+                                JLabel warrantyDateValue = new JLabel(product.getWarrantyDate());
+                                detailsPanel.add(warrantyDateLabel);
+                                detailsPanel.add(warrantyDateValue);
                             
+                               
+                               
+
+                                JOptionPane.showMessageDialog(null, detailsPanel, "Product Details", JOptionPane.PLAIN_MESSAGE);
+                            }
                         });
                         scrollableList2.add(productButton);
                     }
@@ -364,7 +505,28 @@ public class HomePage extends JFrame {
                         producButton.setAlignmentX(Component.LEFT_ALIGNMENT);
                         producButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                // TODO: Display project details in a separate panel
+                                JPanel detailsPanel = new JPanel(new GridLayout(3, 2));
+        
+                                // Add project details
+                                JLabel nameLabel = new JLabel("Product Name:");
+                                JLabel nameValue = new JLabel(product.getProductName());
+                                detailsPanel.add(nameLabel);
+                                detailsPanel.add(nameValue);
+                                
+                                JLabel priceLabel = new JLabel("Price:");
+                                JLabel   priceValue = new JLabel(String.format("$%.2f", product.getPrice()));
+                                detailsPanel.add(priceLabel);
+                                detailsPanel.add(priceValue);
+                                
+                                JLabel warrantyDateLabel = new JLabel("Warranty Date:");
+                                JLabel warrantyDateValue = new JLabel(product.getWarrantyDate());
+                                detailsPanel.add(warrantyDateLabel);
+                                detailsPanel.add(warrantyDateValue);
+                            
+                               
+                               
+
+                                JOptionPane.showMessageDialog(null, detailsPanel, "Product Details", JOptionPane.PLAIN_MESSAGE);
                             }
                         });
                         scrollableList2.add(producButton);
@@ -538,5 +700,17 @@ public class HomePage extends JFrame {
 
         setVisible(true);
     }
-
+    private void updateExpenseDetails(JLabel expensesValue, JLabel budgetVsExpensesValue, Projects project) {
+        double totalExpenses = 0.0;
+        double budgetVsExpenses = 0.0;
+        try {
+            totalExpenses = expenseController.getTotalExpensesByProjectId(project.getProjectId());
+            budgetVsExpenses = expenseController.getBudgetVsExpenses(project);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    
+        expensesValue.setText(String.format("$%.2f", totalExpenses));
+        budgetVsExpensesValue.setText(String.format("$%.2f", budgetVsExpenses));
+    }
 }
