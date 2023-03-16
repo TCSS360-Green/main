@@ -72,7 +72,6 @@ public class ExpenseWindow extends JDialog {
                 dispose();
             }
         });
-
         add(panel);
         pack();
       
